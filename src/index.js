@@ -17,27 +17,29 @@ class Board extends React.Component {
             onClick={() => this.props.onClick(i)}
         />;
     }
+    renderRow(row) {
+        const squares = [];
+        const offset = row * 3;
+        for (let s = 0; s < 3; s++) {
+            squares.push(
+                this.renderSquare(offset + s)
+            );
+        }
+        return (
+            <div className="board-row">
+                {squares}
+            </div>
+        )
+    }
 
     render() {
-        return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
-        );
+        const rows = [];
+        for (let r = 0; r < 3; r++) {
+            rows.push(
+                this.renderRow(r)
+            );
+        }
+        return <div>{rows}</div>;
     }
 }
 
@@ -56,7 +58,7 @@ class Game extends React.Component {
     }
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        const current = history[history.length -1];
+        const current = history[history.length - 1];
         const squares = current.squares.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
@@ -87,7 +89,10 @@ class Game extends React.Component {
                 'Go to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <button
+                        className={this.state.stepNumber === move ? 'bold' : ''}
+                        onClick={() => this.jumpTo(move)}>{desc}
+                    </button>
                 </li>
             );
         });
